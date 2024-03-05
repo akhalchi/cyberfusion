@@ -1,0 +1,6 @@
+pika
+aio_pika
+uvicorn
+sqlalchemy
+aiosqlite
+pydantic

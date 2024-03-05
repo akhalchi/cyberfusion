@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api_app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    networks:
+      - app_network
+    restart: on-failure:5
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - app_network
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
+  rpchandler_app:
+    build:
+      context: ./rpchandler
+      dockerfile: Dockerfile
+    depends_on:
+      - rabbitmq
+    networks:
+      - app_network
+    restart: on-failure:5
+
+networks:
+  app_network:
+    driver: bridge
